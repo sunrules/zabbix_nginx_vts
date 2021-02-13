@@ -1,0 +1,500 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<zabbix_export>
+    <version>4.4</version>
+    <date>2021-02-13T15:25:50Z</date>
+    <groups>
+        <group>
+            <name>Templates</name>
+        </group>
+    </groups>
+    <templates>
+        <template>
+            <template>Template app Nginx VTS</template>
+            <name>Template app Nginx VTS</name>
+            <description>Template for Nginx Vhost Traffic Status</description>
+            <groups>
+                <group>
+                    <name>Templates</name>
+                </group>
+            </groups>
+            <applications>
+                <application>
+                    <name>Nginx</name>
+                </application>
+            </applications>
+            <items>
+                <item>
+                    <name>Nginx: Service response time</name>
+                    <type>SIMPLE</type>
+                    <key>net.tcp.service.perf[http,&quot;{HOST.IP}&quot;,&quot;{$NGINX.VTS_STATUS.PORT}&quot;]</key>
+                    <history>7d</history>
+                    <value_type>FLOAT</value_type>
+                    <units>s</units>
+                    <applications>
+                        <application>
+                            <name>Nginx</name>
+                        </application>
+                    </applications>
+                    <triggers>
+                        <trigger>
+                            <expression>{min(5m)}&gt;{$NGINX.RESPONSE_TIME.MAX.WARN}</expression>
+                            <name>Nginx: Service response time is too high (over {$NGINX.RESPONSE_TIME.MAX.WARN}s for 5m)</name>
+                            <priority>WARNING</priority>
+                            <manual_close>YES</manual_close>
+                            <dependencies>
+                                <dependency>
+                                    <name>Nginx: Service is down</name>
+                                    <expression>{Template app Nginx VTS:net.tcp.service[http,&quot;{HOST.IP}&quot;,&quot;{$NGINX.VTS_STATUS.PORT}&quot;].last()}=0</expression>
+                                </dependency>
+                            </dependencies>
+                        </trigger>
+                    </triggers>
+                </item>
+                <item>
+                    <name>Nginx: Service status</name>
+                    <type>SIMPLE</type>
+                    <key>net.tcp.service[http,&quot;{HOST.IP}&quot;,&quot;{$NGINX.VTS_STATUS.PORT}&quot;]</key>
+                    <history>7d</history>
+                    <applications>
+                        <application>
+                            <name>Nginx</name>
+                        </application>
+                    </applications>
+                    <valuemap>
+                        <name>Service state</name>
+                    </valuemap>
+                    <preprocessing>
+                        <step>
+                            <type>DISCARD_UNCHANGED_HEARTBEAT</type>
+                            <params>10m</params>
+                        </step>
+                    </preprocessing>
+                    <triggers>
+                        <trigger>
+                            <expression>{last()}=0</expression>
+                            <name>Nginx: Service is down</name>
+                            <priority>AVERAGE</priority>
+                            <manual_close>YES</manual_close>
+                        </trigger>
+                    </triggers>
+                </item>
+                <item>
+                    <name>Nginx active connections</name>
+                    <key>nginx.stat[http://{HOST.DNS}{$NGINX.VTS_STATUS.PORT.80}/{$NGINX.VTS_STATUS.PATH},connections,active]</key>
+                    <history>7d</history>
+                    <applications>
+                        <application>
+                            <name>Nginx</name>
+                        </application>
+                    </applications>
+                    <preprocessing>
+                        <step>
+                            <type>CHANGE_PER_SECOND</type>
+                            <params/>
+                        </step>
+                    </preprocessing>
+                </item>
+                <item>
+                    <name>Nginx current requests</name>
+                    <key>nginx.stat[http://{HOST.DNS}{$NGINX.VTS_STATUS.PORT.80}/{$NGINX.VTS_STATUS.PATH},connections,requests]</key>
+                    <history>7d</history>
+                    <applications>
+                        <application>
+                            <name>Nginx</name>
+                        </application>
+                    </applications>
+                    <preprocessing>
+                        <step>
+                            <type>CHANGE_PER_SECOND</type>
+                            <params/>
+                        </step>
+                    </preprocessing>
+                </item>
+            </items>
+            <discovery_rules>
+                <discovery_rule>
+                    <name>Nginx-discovery</name>
+                    <key>nginx.discovery[http://{HOST.DNS}{$NGINX.VTS_STATUS.PORT.80}/{$NGINX.VTS_STATUS.PATH}]</key>
+                    <delay>5m</delay>
+                    <lifetime>0</lifetime>
+                    <item_prototypes>
+                        <item_prototype>
+                            <name>Nginx {#UPSTREAM} responses 5XX per min</name>
+                            <key>nginx.stat[http://{HOST.DNS}{$NGINX.VTS_STATUS.PORT.80}/{$NGINX.VTS_STATUS.PATH},responses,5xx]</key>
+                            <history>7d</history>
+                            <applications>
+                                <application>
+                                    <name>Nginx</name>
+                                </application>
+                            </applications>
+                        </item_prototype>
+                        <item_prototype>
+                            <name>Nginx {#UPSTREAM} {#NODE_IP} requests per min</name>
+                            <key>nginx.stat[http://{HOST.DNS}{$NGINX.VTS_STATUS.PORT.80}/{$NGINX.VTS_STATUS.PATH},upstreams,{#UPSTREAM},peers,{#NODE_IP},requests]</key>
+                            <history>7d</history>
+                            <applications>
+                                <application>
+                                    <name>Nginx</name>
+                                </application>
+                            </applications>
+                        </item_prototype>
+                        <item_prototype>
+                            <name>Nginx {#UPSTREAM} {#NODE_IP} responses 1XX per min</name>
+                            <key>nginx.stat[http://{HOST.DNS}{$NGINX.VTS_STATUS.PORT.80}/{$NGINX.VTS_STATUS.PATH},upstreams,{#UPSTREAM},peers,{#NODE_IP},responses,1xx]</key>
+                            <history>7d</history>
+                            <applications>
+                                <application>
+                                    <name>Nginx</name>
+                                </application>
+                            </applications>
+                        </item_prototype>
+                        <item_prototype>
+                            <name>Nginx {#UPSTREAM} {#NODE_IP} responses 2XX per min</name>
+                            <key>nginx.stat[http://{HOST.DNS}{$NGINX.VTS_STATUS.PORT.80}/{$NGINX.VTS_STATUS.PATH},upstreams,{#UPSTREAM},peers,{#NODE_IP},responses,2xx]</key>
+                            <history>7d</history>
+                            <applications>
+                                <application>
+                                    <name>Nginx</name>
+                                </application>
+                            </applications>
+                        </item_prototype>
+                        <item_prototype>
+                            <name>Nginx {#UPSTREAM} {#NODE_IP} responses 3XX per min</name>
+                            <key>nginx.stat[http://{HOST.DNS}{$NGINX.VTS_STATUS.PORT.80}/{$NGINX.VTS_STATUS.PATH},upstreams,{#UPSTREAM},peers,{#NODE_IP},responses,3xx]</key>
+                            <history>7d</history>
+                            <applications>
+                                <application>
+                                    <name>Nginx</name>
+                                </application>
+                            </applications>
+                        </item_prototype>
+                        <item_prototype>
+                            <name>Nginx {#UPSTREAM} {#NODE_IP} responses 4XX per min</name>
+                            <key>nginx.stat[http://{HOST.DNS}{$NGINX.VTS_STATUS.PORT.80}/{$NGINX.VTS_STATUS.PATH},upstreams,{#UPSTREAM},peers,{#NODE_IP},responses,4xx]</key>
+                            <history>7d</history>
+                            <applications>
+                                <application>
+                                    <name>Nginx</name>
+                                </application>
+                            </applications>
+                        </item_prototype>
+                        <item_prototype>
+                            <name>Nginx {#UPSTREAM} {#NODE_IP} responses 5XX per min</name>
+                            <key>nginx.stat[http://{HOST.DNS}{$NGINX.VTS_STATUS.PORT.80}/{$NGINX.VTS_STATUS.PATH},upstreams,{#UPSTREAM},peers,{#NODE_IP},responses,5xx]</key>
+                            <history>7d</history>
+                            <applications>
+                                <application>
+                                    <name>Nginx</name>
+                                </application>
+                            </applications>
+                        </item_prototype>
+                        <item_prototype>
+                            <name>Nginx {#UPSTREAM} active connections</name>
+                            <key>nginx.stat[http://{HOST.DNS}{$NGINX.VTS_STATUS.PORT.80}/{$NGINX.VTS_STATUS.PATH},upstreams,{#UPSTREAM},requests]</key>
+                            <history>7d</history>
+                            <applications>
+                                <application>
+                                    <name>Nginx</name>
+                                </application>
+                            </applications>
+                        </item_prototype>
+                        <item_prototype>
+                            <name>Nginx {#UPSTREAM} responses 1XX per min</name>
+                            <key>nginx.stat[http://{HOST.DNS}{$NGINX.VTS_STATUS.PORT.80}/{$NGINX.VTS_STATUS.PATH},upstreams,{#UPSTREAM},responses,1xx]</key>
+                            <history>7d</history>
+                            <applications>
+                                <application>
+                                    <name>Nginx</name>
+                                </application>
+                            </applications>
+                        </item_prototype>
+                        <item_prototype>
+                            <name>Nginx {#UPSTREAM} responses 2XX per min</name>
+                            <key>nginx.stat[http://{HOST.DNS}{$NGINX.VTS_STATUS.PORT.80}/{$NGINX.VTS_STATUS.PATH},upstreams,{#UPSTREAM},responses,2xx]</key>
+                            <history>7d</history>
+                            <applications>
+                                <application>
+                                    <name>Nginx</name>
+                                </application>
+                            </applications>
+                        </item_prototype>
+                        <item_prototype>
+                            <name>Nginx {#UPSTREAM} responses 3XX per min</name>
+                            <key>nginx.stat[http://{HOST.DNS}{$NGINX.VTS_STATUS.PORT.80}/{$NGINX.VTS_STATUS.PATH},upstreams,{#UPSTREAM},responses,3xx]</key>
+                            <history>7d</history>
+                            <applications>
+                                <application>
+                                    <name>Nginx</name>
+                                </application>
+                            </applications>
+                        </item_prototype>
+                        <item_prototype>
+                            <name>Nginx #UPSTREAM} responses 4XX per min</name>
+                            <key>nginx.stat[http://{HOST.DNS}{$NGINX.VTS_STATUS.PORT.80}/{$NGINX.VTS_STATUS.PATH},upstreams,{#UPSTREAM},responses,4xx]</key>
+                            <history>7d</history>
+                            <applications>
+                                <application>
+                                    <name>Nginx</name>
+                                </application>
+                            </applications>
+                        </item_prototype>
+                        <item_prototype>
+                            <name>Nginx {#ZONE} active connections</name>
+                            <key>nginx.stat[http://{HOST.DNS}{$NGINX.VTS_STATUS.PORT.80}/{$NGINX.VTS_STATUS.PATH},zones,{#ZONE},requests]</key>
+                            <history>7d</history>
+                            <applications>
+                                <application>
+                                    <name>Nginx</name>
+                                </application>
+                            </applications>
+                        </item_prototype>
+                        <item_prototype>
+                            <name>Nginx {#ZONE} responses 1XX per min</name>
+                            <key>nginx.stat[http://{HOST.DNS}{$NGINX.VTS_STATUS.PORT.80}/{$NGINX.VTS_STATUS.PATH},zones,{#ZONE},responses,1xx]</key>
+                            <history>7d</history>
+                            <applications>
+                                <application>
+                                    <name>Nginx</name>
+                                </application>
+                            </applications>
+                        </item_prototype>
+                        <item_prototype>
+                            <name>Nginx {#ZONE} responses 2XX per min</name>
+                            <key>nginx.stat[http://{HOST.DNS}{$NGINX.VTS_STATUS.PORT.80}/{$NGINX.VTS_STATUS.PATH},zones,{#ZONE},responses,2xx]</key>
+                            <history>7d</history>
+                            <applications>
+                                <application>
+                                    <name>Nginx</name>
+                                </application>
+                            </applications>
+                        </item_prototype>
+                        <item_prototype>
+                            <name>Nginx {#ZONE}  responses 3XX per min</name>
+                            <key>nginx.stat[http://{HOST.DNS}{$NGINX.VTS_STATUS.PORT.80}/{$NGINX.VTS_STATUS.PATH},zones,{#ZONE},responses,3xx]</key>
+                            <history>7d</history>
+                            <applications>
+                                <application>
+                                    <name>Nginx</name>
+                                </application>
+                            </applications>
+                        </item_prototype>
+                        <item_prototype>
+                            <name>Nginx {#ZONE}  responses 4XX per min</name>
+                            <key>nginx.stat[http://{HOST.DNS}{$NGINX.VTS_STATUS.PORT.80}/{$NGINX.VTS_STATUS.PATH},zones,{#ZONE},responses,4xx]</key>
+                            <history>7d</history>
+                            <applications>
+                                <application>
+                                    <name>Nginx</name>
+                                </application>
+                            </applications>
+                        </item_prototype>
+                        <item_prototype>
+                            <name>Nginx {#ZONE}  responses 5XX per min</name>
+                            <key>nginx.stat[http://{HOST.DNS}{$NGINX.VTS_STATUS.PORT.80}/{$NGINX.VTS_STATUS.PATH},zones,{#ZONE},responses,5xx]</key>
+                            <history>7d</history>
+                            <applications>
+                                <application>
+                                    <name>Nginx</name>
+                                </application>
+                            </applications>
+                        </item_prototype>
+                    </item_prototypes>
+                    <trigger_prototypes>
+                        <trigger_prototype>
+                            <expression>({Template app Nginx VTS:nginx.stat[http://{HOST.DNS}{$NGINX.VTS_STATUS.PORT.80}/{$NGINX.VTS_STATUS.PATH},upstreams,{#UPSTREAM},peers,{#NODE_IP},responses,4xx].sum(#20)}+{Template app Nginx VTS:nginx.stat[http://{HOST.DNS}{$NGINX.VTS_STATUS.PORT.80}/{$NGINX.VTS_STATUS.PATH},upstreams,{#UPSTREAM},peers,{#NODE_IP},responses,5xx].sum(#20)})&gt;{Template app Nginx VTS:nginx.stat[http://{HOST.DNS}{$NGINX.VTS_STATUS.PORT.80}/{$NGINX.VTS_STATUS.PATH},upstreams,{#UPSTREAM},peers,{#NODE_IP},responses,2xx].sum(#20)}</expression>
+                            <name>{HOST.NAME} {#UPSTREAM} {#NODE_IP} responses check</name>
+                            <priority>WARNING</priority>
+                            <description>Sum of responses with 5xx and 4xx codes more then 2xx codes.</description>
+                        </trigger_prototype>
+                    </trigger_prototypes>
+                    <graph_prototypes>
+                        <graph_prototype>
+                            <name>Nginx {#UPSTREAM} active connections</name>
+                            <graph_items>
+                                <graph_item>
+                                    <color>1A7C11</color>
+                                    <item>
+                                        <host>Template app Nginx VTS</host>
+                                        <key>nginx.stat[http://{HOST.DNS}{$NGINX.VTS_STATUS.PORT.80}/{$NGINX.VTS_STATUS.PATH},upstreams,{#UPSTREAM},requests]</key>
+                                    </item>
+                                </graph_item>
+                            </graph_items>
+                        </graph_prototype>
+                        <graph_prototype>
+                            <name>Nginx {#UPSTREAM} responses 1XX 3XX 4XX 5XX</name>
+                            <graph_items>
+                                <graph_item>
+                                    <color>AC8C14</color>
+                                    <item>
+                                        <host>Template app Nginx VTS</host>
+                                        <key>nginx.stat[http://{HOST.DNS}{$NGINX.VTS_STATUS.PORT.80}/{$NGINX.VTS_STATUS.PATH},upstreams,{#UPSTREAM},responses,1xx]</key>
+                                    </item>
+                                </graph_item>
+                                <graph_item>
+                                    <sortorder>1</sortorder>
+                                    <color>A54F10</color>
+                                    <item>
+                                        <host>Template app Nginx VTS</host>
+                                        <key>nginx.stat[http://{HOST.DNS}{$NGINX.VTS_STATUS.PORT.80}/{$NGINX.VTS_STATUS.PATH},upstreams,{#UPSTREAM},responses,3xx]</key>
+                                    </item>
+                                </graph_item>
+                                <graph_item>
+                                    <sortorder>2</sortorder>
+                                    <color>3A1C20</color>
+                                    <item>
+                                        <host>Template app Nginx VTS</host>
+                                        <key>nginx.stat[http://{HOST.DNS}{$NGINX.VTS_STATUS.PORT.80}/{$NGINX.VTS_STATUS.PATH},upstreams,{#UPSTREAM},responses,4xx]</key>
+                                    </item>
+                                </graph_item>
+                                <graph_item>
+                                    <sortorder>3</sortorder>
+                                    <color>F63120</color>
+                                    <item>
+                                        <host>Template app Nginx VTS</host>
+                                        <key>nginx.stat[http://{HOST.DNS}{$NGINX.VTS_STATUS.PORT.80}/{$NGINX.VTS_STATUS.PATH},responses,5xx]</key>
+                                    </item>
+                                </graph_item>
+                            </graph_items>
+                        </graph_prototype>
+                        <graph_prototype>
+                            <name>Nginx {#UPSTREAM} responses 2XX</name>
+                            <graph_items>
+                                <graph_item>
+                                    <color>2774A4</color>
+                                    <item>
+                                        <host>Template app Nginx VTS</host>
+                                        <key>nginx.stat[http://{HOST.DNS}{$NGINX.VTS_STATUS.PORT.80}/{$NGINX.VTS_STATUS.PATH},upstreams,{#UPSTREAM},responses,2xx]</key>
+                                    </item>
+                                </graph_item>
+                            </graph_items>
+                        </graph_prototype>
+                        <graph_prototype>
+                            <name>Nginx {#ZONE} active connections</name>
+                            <graph_items>
+                                <graph_item>
+                                    <color>1A7C11</color>
+                                    <item>
+                                        <host>Template app Nginx VTS</host>
+                                        <key>nginx.stat[http://{HOST.DNS}{$NGINX.VTS_STATUS.PORT.80}/{$NGINX.VTS_STATUS.PATH},zones,{#ZONE},requests]</key>
+                                    </item>
+                                </graph_item>
+                            </graph_items>
+                        </graph_prototype>
+                        <graph_prototype>
+                            <name>Nginx {#ZONE}  responses 1XX 3XX 4XX 5XX</name>
+                            <graph_items>
+                                <graph_item>
+                                    <color>AC8C14</color>
+                                    <item>
+                                        <host>Template app Nginx VTS</host>
+                                        <key>nginx.stat[http://{HOST.DNS}{$NGINX.VTS_STATUS.PORT.80}/{$NGINX.VTS_STATUS.PATH},zones,{#ZONE},responses,1xx]</key>
+                                    </item>
+                                </graph_item>
+                                <graph_item>
+                                    <sortorder>1</sortorder>
+                                    <color>A54F10</color>
+                                    <item>
+                                        <host>Template app Nginx VTS</host>
+                                        <key>nginx.stat[http://{HOST.DNS}{$NGINX.VTS_STATUS.PORT.80}/{$NGINX.VTS_STATUS.PATH},zones,{#ZONE},responses,3xx]</key>
+                                    </item>
+                                </graph_item>
+                                <graph_item>
+                                    <sortorder>2</sortorder>
+                                    <color>3A1C20</color>
+                                    <item>
+                                        <host>Template app Nginx VTS</host>
+                                        <key>nginx.stat[http://{HOST.DNS}{$NGINX.VTS_STATUS.PORT.80}/{$NGINX.VTS_STATUS.PATH},zones,{#ZONE},responses,4xx]</key>
+                                    </item>
+                                </graph_item>
+                                <graph_item>
+                                    <sortorder>3</sortorder>
+                                    <color>F63120</color>
+                                    <item>
+                                        <host>Template app Nginx VTS</host>
+                                        <key>nginx.stat[http://{HOST.DNS}{$NGINX.VTS_STATUS.PORT.80}/{$NGINX.VTS_STATUS.PATH},zones,{#ZONE},responses,5xx]</key>
+                                    </item>
+                                </graph_item>
+                            </graph_items>
+                        </graph_prototype>
+                        <graph_prototype>
+                            <name>Nginx {#ZONE} responses 2XX</name>
+                            <graph_items>
+                                <graph_item>
+                                    <color>2774A4</color>
+                                    <item>
+                                        <host>Template app Nginx VTS</host>
+                                        <key>nginx.stat[http://{HOST.DNS}{$NGINX.VTS_STATUS.PORT.80}/{$NGINX.VTS_STATUS.PATH},zones,{#ZONE},responses,2xx]</key>
+                                    </item>
+                                </graph_item>
+                            </graph_items>
+                        </graph_prototype>
+                    </graph_prototypes>
+                </discovery_rule>
+            </discovery_rules>
+            <macros>
+                <macro>
+                    <macro>{$NGINX.VTS_STATUS.HOST}</macro>
+                    <value>http://{HOSTNAME}/nginx_vts_status/format/json</value>
+                    <description>Path to http dashboard nginx vts_status. json format</description>
+                </macro>
+                <macro>
+                    <macro>{$NGINX.VTS_STATUS.PATH}</macro>
+                    <value>nginx_vts_status/format/json</value>
+                    <description>The path of Nginx vts_status page.</description>
+                </macro>
+                <macro>
+                    <macro>{$NGINX.VTS_STATUS.PORT}</macro>
+                    <value>80</value>
+                    <description>The port of Nginx.  Macros for item</description>
+                </macro>
+                <macro>
+                    <macro>{$NGINX.VTS_STATUS.PORT.80}</macro>
+                    <value>:80</value>
+                    <description>The port of Nginx. Macros for item prototype</description>
+                </macro>
+                <macro>
+                    <macro>{$NGINX.VTS_STATUS.SCHEME}</macro>
+                    <value>http</value>
+                    <description>The protocol http or https of Nginx vts_status host or container.</description>
+                </macro>
+            </macros>
+        </template>
+    </templates>
+    <graphs>
+        <graph>
+            <name>Nginx connections and requests</name>
+            <graph_items>
+                <graph_item>
+                    <color>1A7C11</color>
+                    <item>
+                        <host>Template app Nginx VTS</host>
+                        <key>nginx.stat[http://{HOST.DNS}{$NGINX.VTS_STATUS.PORT.80}/{$NGINX.VTS_STATUS.PATH},connections,active]</key>
+                    </item>
+                </graph_item>
+                <graph_item>
+                    <sortorder>1</sortorder>
+                    <color>F63100</color>
+                    <item>
+                        <host>Template app Nginx VTS</host>
+                        <key>nginx.stat[http://{HOST.DNS}{$NGINX.VTS_STATUS.PORT.80}/{$NGINX.VTS_STATUS.PATH},connections,requests]</key>
+                    </item>
+                </graph_item>
+            </graph_items>
+        </graph>
+    </graphs>
+    <value_maps>
+        <value_map>
+            <name>Service state</name>
+            <mappings>
+                <mapping>
+                    <value>0</value>
+                    <newvalue>Down</newvalue>
+                </mapping>
+                <mapping>
+                    <value>1</value>
+                    <newvalue>Up</newvalue>
+                </mapping>
+            </mappings>
+        </value_map>
+    </value_maps>
+</zabbix_export>

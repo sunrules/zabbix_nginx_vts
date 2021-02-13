@@ -1,4 +1,4 @@
-#! /usr/bin/python2
+#!/usr/local/bin/python3
 # -*- coding: utf-8 -*-
 # script awaits command line args for input
 # json keys from nginx status use as args
@@ -16,14 +16,16 @@
 # 9) summ active connections                 [upstreams,{#UPSTREAM},active]
 # 10) summ requests per second               [upstreams,{#UPSTREAM},requests]
 # 11) summ responses for every HTTP-code per second  [upstreams,{#UPSTREAM},responses,Xxx]
+#response = urllib.request.urlopen(url)
+#response = urllib.request.urlopen("http://stackoverflow.com/documentation/")
 
-import json, sys, os, urllib
+
+import json, sys, os, urllib.request
 
 # parse json from nginx to doct data
-#url="https://site.ru/status/format/json"
 url = str(sys.argv[1])
 directory="/tmp/nginx-stats/"
-response = urllib.urlopen(url)
+response = urllib.request.urlopen(url)
 data = json.loads(response.read())
 maxTime = float(3600)  # in seconds
 avgTime = float(60) # average during, in seconds
@@ -59,7 +61,7 @@ else:
 # check load_timestamp with data from previous run
 # if it have another value, create temp file
 # with current data and exit.
-if int(data['loadMsec']) <> int(data_delta['loadMsec']):
+if int(data['loadMsec']) != int(data_delta['loadMsec']):
     with open(tmpfile, 'w') as delta_file:
         json.dump(data, delta_file)
     sys.exit()
@@ -75,7 +77,7 @@ if int(data['nowMsec']) - int(timestampDelta) > (maxTime * 1000) :
 delta = (data['nowMsec'] - timestampDelta) / (avgTime * 1000)
 
 if ((str(sys.argv[2])) == "connections") or ((str(sys.argv[2])) == "requests"):
-  print data['connections'][str(sys.argv[3])] # print all active connections or all current connections
+  print (data['connections'][str(sys.argv[3])]) # print all active connections or all current connections
 elif (str(sys.argv[2])) == "upstreams":
   ip_data = dict([[v['server'],v] for v in data['upstreamZones'][str(sys.argv[3])]])
   ip_data_delta = dict([[v['server'],v] for v in data_delta['upstreamZones'][str(sys.argv[3])]])
@@ -92,7 +94,7 @@ elif (str(sys.argv[2])) == "upstreams":
       summ_responses_5xx = summ_responses_5xx + (ip_data[i]['responses']['5xx'] - ip_data_delta[i]['responses']['5xx']) / delta
 
     if (str(sys.argv[4])) == "active":
-      print summ_active
+      print (summ_active)
     elif (str(sys.argv[4])) == "requests":
       printInt (summ_requests)
     elif (str(sys.argv[4])) == "responses":
@@ -112,7 +114,7 @@ elif (str(sys.argv[2])) == "upstreams":
       sys.exit()
 
   elif ((str(sys.argv[6])) == "active") or ((str(sys.argv[6])) == "state"):
-    print ip_data[str(sys.argv[5])][str(sys.argv[6])] # print peer's active connections or peer's state
+    print (ip_data[str(sys.argv[5])][str(sys.argv[6])]) # print peer's active connections or peer's state
   elif (str(sys.argv[6])) == "requests":
     printInt ((ip_data[str(sys.argv[5])]['requestCounter'] - ip_data_delta[str(sys.argv[5])]['requestCounter']) / delta)
   elif (str(sys.argv[6])) == "responses":
@@ -145,7 +147,7 @@ elif (str(sys.argv[2])) == "zones":
       summ_responses_5xx = summ_responses_5xx + (ip_data['responses']['5xx'] - ip_data_delta['responses']['5xx']) / delta
 
     if (str(sys.argv[4])) == "active":
-      print summ_active
+      print (summ_active)
     elif (str(sys.argv[4])) == "requests":
       printInt (summ_requests)
     elif (str(sys.argv[4])) == "responses":
@@ -165,7 +167,7 @@ elif (str(sys.argv[2])) == "zones":
       sys.exit()
 
   elif ((str(sys.argv[6])) == "active") or ((str(sys.argv[6])) == "state"):
-    print ip_data[str(sys.argv[5])][str(sys.argv[6])] # print peer's active connections or peer's state
+    print (ip_data[str(sys.argv[5])][str(sys.argv[6])]) # print peer's active connections or peer's state
   elif (str(sys.argv[6])) == "requests":
     printInt ((ip_data[str(sys.argv[5])]['requestCounter'] - ip_data_delta[str(sys.argv[5])]['requestCounter']) / delta)
   elif (str(sys.argv[6])) == "responses":
@@ -182,7 +184,7 @@ elif (str(sys.argv[2])) == "zones":
     else:
       sys.exit()
   else:
-	sys.exit()
+    sys.exit()
 
 else:
   sys.exit()

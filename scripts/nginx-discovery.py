@@ -1,4 +1,4 @@
-#! /usr/bin/python2
+#! /usr/local/bin/python3
 # -*- coding: utf-8 -*-
 # parse json from nginx again
 # we need to make /another/ json for zabbix
@@ -6,12 +6,12 @@
 # this script doing just one thing - make json for zabbix with right format
 # unfortunately, json.dumps gives a slightly different format
 
-import json, sys, os, re, urllib
+import json, sys, os, re, urllib.request
 
 # parse json from nginx to dict data
 #url="https://site.ru/status/format/json"
 url = str(sys.argv[1])
-response = urllib.urlopen(url)
+response = urllib.request.urlopen(url)
 data = json.loads(response.read())
 
 # forming json for LLD zabbix where {#UPSTREAM} - upstream's name
@@ -20,7 +20,7 @@ data = json.loads(response.read())
 
 result="{\n\"data\":[\n"
 
-# ищем server-ы
+# ищем servers
 
 for i in sorted(data['serverZones'].keys()):
 	if str(i) == "*": 
@@ -29,7 +29,7 @@ for i in sorted(data['serverZones'].keys()):
 	result = result + "\"{#ZONE}\":\""+str(i)+"\"\n"
 	result = result + "},\n"
 
-# ищем upstream-ы, если нету забиваем
+# ищем upstreams
 try:
     'server' in sorted(data['upstreamZones'].keys())
 except KeyError as e:
@@ -44,5 +44,5 @@ else:
                  result = result + "},\n"
 
 result = re.sub("},\n$", "", result) + "}]\n}\n"
-print result
+print (result)
 
