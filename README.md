@@ -1,10 +1,11 @@
 # zabbix_nginx_vts
 Скрипты мониторинга zabbix для nginx-module-vts.
+
 В данном форке проекта Vovanys/zabbix_nginx_vts внесены некоторые изменения:
 1. Экспорт template из версии Zabbix 4.4;
-2. В tamplate внесены некоторые изменения:
+2. В tamplate:
    Добавлен триггер для проверки статуса сервиса nginx;
-   Внесены изменения в макросы, item, item prototype добавлены графики.
+   Внесены изменения в макросы, item, item prototype, добавлены графики.
 3. Скрипты переделаны на Python3;
 4. Настройка Nginx описана для ОС FreeBSD 11.4.
 
