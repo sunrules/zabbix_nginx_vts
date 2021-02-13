@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <zabbix_export>
     <version>4.4</version>
-    <date>2021-02-13T15:25:50Z</date>
+    <date>2021-02-13T18:42:59Z</date>
     <groups>
         <group>
             <name>Templates</name>
@@ -440,22 +440,22 @@
                 <macro>
                     <macro>{$NGINX.VTS_STATUS.PATH}</macro>
                     <value>nginx_vts_status/format/json</value>
-                    <description>The path of Nginx vts_status page.</description>
+                    <description>Path of Nginx vts_status page.</description>
                 </macro>
                 <macro>
                     <macro>{$NGINX.VTS_STATUS.PORT}</macro>
                     <value>80</value>
-                    <description>The port of Nginx.  Macros for item</description>
+                    <description>Port of Nginx.  Macros for item</description>
                 </macro>
                 <macro>
                     <macro>{$NGINX.VTS_STATUS.PORT.80}</macro>
                     <value>:80</value>
-                    <description>The port of Nginx. Macros for item prototype</description>
+                    <description>Port of Nginx. Macros for item prototype</description>
                 </macro>
                 <macro>
                     <macro>{$NGINX.VTS_STATUS.SCHEME}</macro>
                     <value>http</value>
-                    <description>The protocol http or https of Nginx vts_status host or container.</description>
+                    <description>Protocol http or https of Nginx vts_status host or container.</description>
                 </macro>
             </macros>
         </template>
