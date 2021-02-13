@@ -66,8 +66,6 @@ location /nginx_vts_status {
  
  Discovery должен найти все существующие vhost и upstream
 
-![vts_status_boar](https://github.com/sunrules/zabbix_nginx_vts/blob/master/img/nginx_vts_status_board.jpg?raw=true)
+![vts_status_board](https://github.com/sunrules/zabbix_nginx_vts/blob/master/img/nginx_vts_status_board.jpg?raw=true)
 
 ![lastdata](https://github.com/sunrules/zabbix_nginx_vts/blob/master/img/lastdata.jpg?raw=true)
-
-![discovery](https://github.com/sunrules/zabbix_nginx_vts/blob/master/img/discovery.jpg?raw=true)
