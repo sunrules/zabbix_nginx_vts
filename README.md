@@ -3,8 +3,8 @@
 
 В данном форке проекта Vovanys/zabbix_nginx_vts внесены некоторые изменения:
 1. Экспорт template из версии Zabbix 4.4;
-2. В tamplate:
-   Добавлен триггер для проверки статуса сервиса nginx;
+2. В tamplate:  
+   Добавлен триггер для проверки статуса сервиса nginx;    
    Внесены изменения в макросы, item, item prototype, добавлены графики.
 3. Скрипты переделаны на Python3;
 4. Настройка Nginx описана для ОС FreeBSD 11.4.
@@ -17,7 +17,7 @@
 
 **Установка**
 
-1. Сборка Nginx
+1. Сборка Nginx:
 
  /configure --prefix=/usr/local/nginx \
 --sbin-path=/usr/local/nginx/sbin/nginx \
@@ -27,33 +27,30 @@
 --user=www \
 --group=www \
 --with-http_stub_status_module \
---add-module=../nginx-module-vts-0.1.18 
+--add-module=../nginx-module-vts-0.1.18    
+make -j4    
+sudo make install 
 
-make -j4
+2. Добавить в секцию http nginx.conf:   
 
-sudo make  install
-
-2. Добавить в секцию http 
-nginx.conf
-
-http {
+http {  
 vhost_traffic_status_zone;
 
 3. Добавить в конфигурационный файл, можно default.conf
 
-location /nginx_vts_status {
-    # Включаем отображение статуса
-    vhost_traffic_status_display;
-    vhost_traffic_status_display_format html;
-    # Не писать в лог эти запросы
-    access_log off;
-    # Разрешить доступ с указанных адресов
-    allow XX.XX.XX.XX; указать IP адрес данного сервера, нужно для python скрипта 
-    allow XX.XX.XX.XX; указать IP адрес компьютера администратора для просмотра dashboard /nginx_vts_status
-    deny all;
- }
+location /nginx_vts_status {            
+    # Включаем отображение статуса           
+    vhost_traffic_status_display;            
+    vhost_traffic_status_display_format html;             
+    # Не писать в лог эти запросы            
+    access_log off;                        
+    # Разрешить доступ с указанных адресов                    
+    allow XX.XX.XX.XX; указать IP адрес данного сервера, нужно для python скрипта                
+    allow XX.XX.XX.XX; указать IP адрес компьютера администратора для просмотра dashboard /nginx_vts_status            
+    deny all;         
+ }            
  
-4. Проверяем и запускаем nginx
+4. Проверяем и запускаем nginx:
 /usr/local/etc/rc.d/nginx configtest
 /usr/local/etc/rc.d/nginx start
 4. Добавить в /usr/local/etc/zabbix44/zabbix_agentd.conf.d/userparameter_nginx_vts.conf
@@ -61,13 +58,15 @@ location /nginx_vts_status {
    UserParameter=nginx.stat[*],/usr/local/etc/zabbix5/scripts/nginx-stats.py $1 $2 $3 $4 $5 $6 $7
    UserParameter=nginx.discovery[*],/usr/local/etc/zabbix5/scripts/nginx-discovery.py $1
 
- 5. Перезапустить zabbix-agent
- 6. Импортировать шаблон в Zabbix
+ 5. Перезапустить zabbix-agent.
+ 6. Импортировать шаблон в Zabbix.
  7. В Макросе template можно изменить порт web сервера, в данном случае установлен 80.
- 8. Присоединить шаблон Nginx VTS к узлу сети
- 9. Проверить наличие свежих данных
+ 8. Присоединить шаблон Nginx VTS к узлу сети.
+ 9. Проверить наличие свежих данных.
  
- Discovery должен найти все существующие vhost и upstream
+ **Проверка**
+ 
+ Discovery должен найти все существующие vhost и upstream.
 
 ![vts_status_board](https://github.com/sunrules/zabbix_nginx_vts/blob/master/img/nginx_vts_status_board.jpg?raw=true)
 
