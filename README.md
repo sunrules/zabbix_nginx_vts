@@ -18,18 +18,20 @@
 **Установка**
 
 1. Сборка Nginx
- ./configure --prefix=/usr/local/nginx \
- --sbin-path=/usr/local/nginx/sbin/nginx \
- --conf-path=/usr/local/nginx/conf/nginx.conf \
- --error-log-path=/usr/local/nginx/log/error.log \
- --http-log-path=/usr/local/nginx/log/access.log \
- --user=www \
- --group=www \
- --with-http_stub_status_module \
- --add-module=../nginx-module-vts-0.1.18 
 
- make -j4
- sudo make  install
+ /configure --prefix=/usr/local/nginx \
+--sbin-path=/usr/local/nginx/sbin/nginx \
+--conf-path=/usr/local/nginx/conf/nginx.conf \
+--error-log-path=/usr/local/nginx/log/error.log \
+--http-log-path=/usr/local/nginx/log/access.log \
+--user=www \
+--group=www \
+--with-http_stub_status_module \
+--add-module=../nginx-module-vts-0.1.18 
+
+make -j4
+
+sudo make  install
 
 2. Добавить в секцию http 
 nginx.conf
