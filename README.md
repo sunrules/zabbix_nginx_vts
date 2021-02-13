@@ -7,8 +7,8 @@
 
 
 
-Скрипты переделаны из скриптов для NGINX PLUS [nginx-plus-zabbix](https://github.com/strannick-ru/nginx-plus-zabbix), что-то добавлено, что-то сломано :) т.к. plus более умный и дает больше данных.
-Добавлено поиск серверов и их статистика, т.к. изначальный скрипт искал только апстримы. 
+[nginx-plus-zabbix](https://github.com/sunrules/zabbix_nginx_vts)
+
 
 **Установка**
 
@@ -27,9 +27,6 @@
  5. Присоединить шаблон Nginx VTS к узлу сети
  6. Проверить наличие свежих данных
 
-![lastdata](https://github.com/Vovanys/zabbix_nginx_vts/blob/master/img/lastdata.jpg?raw=true)
+![lastdata](https://github.com/sunrules/zabbix_nginx_vts/blob/master/img/lastdata.jpg?raw=true)
 
-![discovery](https://github.com/Vovanys/zabbix_nginx_vts/blob/master/img/discovery.jpg?raw=true)
-
-
-Распространяется как есть.
+![discovery](https://github.com/sunrules/zabbix_nginx_vts/blob/master/img/discovery.jpg?raw=true)
