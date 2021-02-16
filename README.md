@@ -50,25 +50,25 @@ location /nginx_vts_status {
  }            
  
 4. Проверяем и запускаем nginx:
-/usr/local/etc/rc.d/nginx configtest
-/usr/local/etc/rc.d/nginx start
-4. Добавить в /usr/local/etc/zabbix44/zabbix_agentd.conf.d/userparameter_nginx_vts.conf
+/usr/local/etc/rc.d/nginx configtest    
+/usr/local/etc/rc.d/nginx start    
+4. Добавить в /usr/local/etc/zabbix44/zabbix_agentd.conf.d/userparameter_nginx_vts.conf    
  
-   UserParameter=nginx.stat[*],/usr/local/etc/zabbix5/scripts/nginx-stats.py $1 $2 $3 $4 $5 $6 $7
-   UserParameter=nginx.discovery[*],/usr/local/etc/zabbix5/scripts/nginx-discovery.py $1
+   UserParameter=nginx.stat[*],/usr/local/etc/zabbix5/scripts/nginx-stats.py $1 $2 $3 $4 $5 $6 $7   
+   UserParameter=nginx.discovery[*],/usr/local/etc/zabbix5/scripts/nginx-discovery.py $1   
 
- 5. Перезапустить zabbix-agent.
- 6. Импортировать шаблон в Zabbix.
- 7. В Макросе template можно изменить порт web сервера, в данном случае установлен 80.   
- 8. Присоединить шаблон Nginx VTS к host машине.   
- 9. Проверить наличие свежих данных.   
+ 5. Перезапустить zabbix-agent.   
+ 6. Импортировать шаблон в Zabbix.   
+ 7. В Макросе template можно изменить порт web сервера, в данном случае установлен 80.     
+ 8. Присоединить шаблон Nginx VTS к host машине.     
+ 9. Проверить наличие свежих данных.     
  10. Если данных нет, вероятно директория для хранения файлов с метриками сформировалась с овнером root    
-     Выполнить на сервере: chown -R zabbix:wheel /tmp/nginx-stats
+     Выполнить на сервере: chown -R zabbix:wheel /tmp/nginx-stats    
  
  **Проверка**
  
- Discovery должен найти все существующие vhost и upstream.
+ Discovery должен найти все существующие vhost и upstream.    
 
-![vts_status_board](https://github.com/sunrules/zabbix_nginx_vts/blob/master/img/nginx_vts_status_board.jpg?raw=true)
+![vts_status_board](https://github.com/sunrules/zabbix_nginx_vts/blob/master/img/nginx_vts_status_board.jpg?raw=true)   
 
-![lastdata](https://github.com/sunrules/zabbix_nginx_vts/blob/master/img/lastdata.jpg?raw=true)
+![lastdata](https://github.com/sunrules/zabbix_nginx_vts/blob/master/img/lastdata.jpg?raw=true)   
