@@ -12,7 +12,6 @@
 **Требования**
 
 [nginx](https://nginx.org/ru/) и установленный модуль [nginx-module-vts](https://github.com/vozlt/nginx-module-vts)
-[nginx-plus-zabbix](https://github.com/sunrules/zabbix_nginx_vts)
 
 
 **Установка**
