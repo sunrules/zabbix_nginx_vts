@@ -1,0 +1,691 @@
+zabbix_export:
+  version: '5.2'
+  date: '2021-04-17T07:21:50Z'
+  groups:
+    -
+      name: Templates
+  templates:
+    -
+      template: Template.Nginx.Vts
+      name: Template.Nginx.Vts
+      groups:
+        -
+          name: Templates
+      applications:
+        -
+          name: 'Nginx VTS'
+      items:
+        -
+          name: 'Nginx: Service response time'
+          type: SIMPLE
+          key: 'net.tcp.service.perf[http,"{HOST.IP}","{$NGINX.VTS_STATUS.PORT}"]'
+          history: 7d
+          value_type: FLOAT
+          units: s
+          applications:
+            -
+              name: 'Nginx VTS'
+        -
+          name: 'Nginx: Service status'
+          type: SIMPLE
+          key: 'net.tcp.service[http,"{HOST.IP}","{$NGINX.VTS_STATUS.PORT}"]'
+          history: 7d
+          applications:
+            -
+              name: 'Nginx VTS'
+          valuemap:
+            name: 'Service state'
+          preprocessing:
+            -
+              type: DISCARD_UNCHANGED_HEARTBEAT
+              parameters:
+                - 10m
+        -
+          name: 'Nginx: run'
+          key: 'nginx.status.run[{HOST.HOST}]'
+          delay: '60'
+          applications:
+            -
+              name: 'Nginx VTS'
+        -
+          name: 'Nginx: $1 $2'
+          type: TRAP
+          key: 'nginx.status[connections,accepted]'
+          delay: '0'
+          applications:
+            -
+              name: 'Nginx VTS'
+          preprocessing:
+            -
+              type: CHANGE_PER_SECOND
+              parameters:
+                - ''
+        -
+          name: 'Nginx: $1 $2'
+          type: TRAP
+          key: 'nginx.status[connections,active]'
+          delay: '0'
+          applications:
+            -
+              name: 'Nginx VTS'
+        -
+          name: 'Nginx: $1 $2'
+          type: TRAP
+          key: 'nginx.status[connections,handled]'
+          delay: '0'
+          applications:
+            -
+              name: 'Nginx VTS'
+          preprocessing:
+            -
+              type: CHANGE_PER_SECOND
+              parameters:
+                - ''
+        -
+          name: 'Nginx: $1 $2'
+          type: TRAP
+          key: 'nginx.status[connections,reading]'
+          delay: '0'
+          applications:
+            -
+              name: 'Nginx VTS'
+        -
+          name: 'Nginx: $1 $2'
+          type: TRAP
+          key: 'nginx.status[connections,requests]'
+          delay: '0'
+          applications:
+            -
+              name: 'Nginx VTS'
+          preprocessing:
+            -
+              type: CHANGE_PER_SECOND
+              parameters:
+                - ''
+        -
+          name: 'Nginx: $1 $2'
+          type: TRAP
+          key: 'nginx.status[connections,waiting]'
+          delay: '0'
+          applications:
+            -
+              name: 'Nginx VTS'
+        -
+          name: 'Nginx: $1 $2'
+          type: TRAP
+          key: 'nginx.status[connections,writing]'
+          delay: '0'
+          applications:
+            -
+              name: 'Nginx VTS'
+      discovery_rules:
+        -
+          name: 'Nginx: Cachezone discovery'
+          type: TRAP
+          key: nginx.cachezone.discovery
+          delay: '0'
+          lifetime: 1d
+          item_prototypes:
+            -
+              name: 'Nginx: $1 $2 $3'
+              type: TRAP
+              key: 'nginx.status[cachezone,"{#CACHEZONE}",bypass]'
+              delay: '0'
+              applications:
+                -
+                  name: 'Nginx VTS'
+              preprocessing:
+                -
+                  type: CHANGE_PER_SECOND
+                  parameters:
+                    - ''
+            -
+              name: 'Nginx: $1 $2 $3'
+              type: TRAP
+              key: 'nginx.status[cachezone,"{#CACHEZONE}",expired]'
+              delay: '0'
+              applications:
+                -
+                  name: 'Nginx VTS'
+              preprocessing:
+                -
+                  type: CHANGE_PER_SECOND
+                  parameters:
+                    - ''
+            -
+              name: 'Nginx: $1 $2 $3'
+              type: TRAP
+              key: 'nginx.status[cachezone,"{#CACHEZONE}",hit]'
+              delay: '0'
+              applications:
+                -
+                  name: 'Nginx VTS'
+              preprocessing:
+                -
+                  type: CHANGE_PER_SECOND
+                  parameters:
+                    - ''
+            -
+              name: 'Nginx: $1 $2 $3'
+              type: TRAP
+              key: 'nginx.status[cachezone,"{#CACHEZONE}",in]'
+              delay: '0'
+              units: B/s
+              applications:
+                -
+                  name: 'Nginx VTS'
+              preprocessing:
+                -
+                  type: CHANGE_PER_SECOND
+                  parameters:
+                    - ''
+            -
+              name: 'Nginx: $1 $2 $3'
+              type: TRAP
+              key: 'nginx.status[cachezone,"{#CACHEZONE}",miss]'
+              delay: '0'
+              applications:
+                -
+                  name: 'Nginx VTS'
+              preprocessing:
+                -
+                  type: CHANGE_PER_SECOND
+                  parameters:
+                    - ''
+            -
+              name: 'Nginx: $1 $2 $3'
+              type: TRAP
+              key: 'nginx.status[cachezone,"{#CACHEZONE}",out]'
+              delay: '0'
+              units: B/s
+              applications:
+                -
+                  name: 'Nginx VTS'
+              preprocessing:
+                -
+                  type: CHANGE_PER_SECOND
+                  parameters:
+                    - ''
+            -
+              name: 'Nginx: $1 $2 $3'
+              type: TRAP
+              key: 'nginx.status[cachezone,"{#CACHEZONE}",revalidated]'
+              delay: '0'
+              applications:
+                -
+                  name: 'Nginx VTS'
+              preprocessing:
+                -
+                  type: CHANGE_PER_SECOND
+                  parameters:
+                    - ''
+            -
+              name: 'Nginx: $1 $2 $3'
+              type: TRAP
+              key: 'nginx.status[cachezone,"{#CACHEZONE}",scarce]'
+              delay: '0'
+              applications:
+                -
+                  name: 'Nginx VTS'
+              preprocessing:
+                -
+                  type: CHANGE_PER_SECOND
+                  parameters:
+                    - ''
+            -
+              name: 'Nginx: $1 $2 $3'
+              type: TRAP
+              key: 'nginx.status[cachezone,"{#CACHEZONE}",stale]'
+              delay: '0'
+              applications:
+                -
+                  name: 'Nginx VTS'
+              preprocessing:
+                -
+                  type: CHANGE_PER_SECOND
+                  parameters:
+                    - ''
+            -
+              name: 'Nginx: $1 $2 $3'
+              type: TRAP
+              key: 'nginx.status[cachezone,"{#CACHEZONE}",updating]'
+              delay: '0'
+              applications:
+                -
+                  name: 'Nginx VTS'
+              preprocessing:
+                -
+                  type: CHANGE_PER_SECOND
+                  parameters:
+                    - ''
+        -
+          name: 'Nginx: Server discovery'
+          type: TRAP
+          key: nginx.server.discovery
+          delay: '0'
+          lifetime: 1d
+          item_prototypes:
+            -
+              name: 'Nginx: $1 $2'
+              type: TRAP
+              key: 'nginx.status["{#SERVERNAME}",in]'
+              delay: '0'
+              units: B/s
+              applications:
+                -
+                  name: 'Nginx VTS'
+              preprocessing:
+                -
+                  type: CHANGE_PER_SECOND
+                  parameters:
+                    - ''
+            -
+              name: 'Nginx: $1 $2'
+              type: TRAP
+              key: 'nginx.status["{#SERVERNAME}",out]'
+              delay: '0'
+              units: B/s
+              applications:
+                -
+                  name: 'Nginx VTS'
+              preprocessing:
+                -
+                  type: CHANGE_PER_SECOND
+                  parameters:
+                    - ''
+            -
+              name: 'Nginx: $1 $2'
+              type: TRAP
+              key: 'nginx.status["{#SERVERNAME}",requests]'
+              delay: '0'
+              applications:
+                -
+                  name: 'Nginx VTS'
+              preprocessing:
+                -
+                  type: CHANGE_PER_SECOND
+                  parameters:
+                    - ''
+            -
+              name: 'Nginx: $1 $2 $3'
+              type: TRAP
+              key: 'nginx.status["{#SERVERNAME}",response,1xx]'
+              delay: '0'
+              applications:
+                -
+                  name: 'Nginx VTS'
+              preprocessing:
+                -
+                  type: CHANGE_PER_SECOND
+                  parameters:
+                    - ''
+            -
+              name: 'Nginx: $1 $2 $3'
+              type: TRAP
+              key: 'nginx.status["{#SERVERNAME}",response,2xx]'
+              delay: '0'
+              applications:
+                -
+                  name: 'Nginx VTS'
+              preprocessing:
+                -
+                  type: CHANGE_PER_SECOND
+                  parameters:
+                    - ''
+            -
+              name: 'Nginx: $1 $2 $3'
+              type: TRAP
+              key: 'nginx.status["{#SERVERNAME}",response,3xx]'
+              delay: '0'
+              applications:
+                -
+                  name: 'Nginx VTS'
+              preprocessing:
+                -
+                  type: CHANGE_PER_SECOND
+                  parameters:
+                    - ''
+            -
+              name: 'Nginx: $1 $2 $3'
+              type: TRAP
+              key: 'nginx.status["{#SERVERNAME}",response,4xx]'
+              delay: '0'
+              applications:
+                -
+                  name: 'Nginx VTS'
+              preprocessing:
+                -
+                  type: CHANGE_PER_SECOND
+                  parameters:
+                    - ''
+            -
+              name: 'Nginx: $1 $2 $3'
+              type: TRAP
+              key: 'nginx.status["{#SERVERNAME}",response,5xx]'
+              delay: '0'
+              applications:
+                -
+                  name: 'Nginx VTS'
+              preprocessing:
+                -
+                  type: CHANGE_PER_SECOND
+                  parameters:
+                    - ''
+            -
+              name: 'Nginx: $1 $2 $3'
+              type: TRAP
+              key: 'nginx.status["{#SERVERNAME}",response,bypass]'
+              delay: '0'
+              applications:
+                -
+                  name: 'Nginx VTS'
+              preprocessing:
+                -
+                  type: CHANGE_PER_SECOND
+                  parameters:
+                    - ''
+            -
+              name: 'Nginx: $1 $2 $3'
+              type: TRAP
+              key: 'nginx.status["{#SERVERNAME}",response,expired]'
+              delay: '0'
+              applications:
+                -
+                  name: 'Nginx VTS'
+              preprocessing:
+                -
+                  type: CHANGE_PER_SECOND
+                  parameters:
+                    - ''
+            -
+              name: 'Nginx: $1 $2 $3'
+              type: TRAP
+              key: 'nginx.status["{#SERVERNAME}",response,hit]'
+              delay: '0'
+              applications:
+                -
+                  name: 'Nginx VTS'
+              preprocessing:
+                -
+                  type: CHANGE_PER_SECOND
+                  parameters:
+                    - ''
+            -
+              name: 'Nginx: $1 $2 $3'
+              type: TRAP
+              key: 'nginx.status["{#SERVERNAME}",response,miss]'
+              delay: '0'
+              applications:
+                -
+                  name: 'Nginx VTS'
+              preprocessing:
+                -
+                  type: CHANGE_PER_SECOND
+                  parameters:
+                    - ''
+            -
+              name: 'Nginx: $1 $2 $3'
+              type: TRAP
+              key: 'nginx.status["{#SERVERNAME}",response,revalidated]'
+              delay: '0'
+              applications:
+                -
+                  name: 'Nginx VTS'
+              preprocessing:
+                -
+                  type: CHANGE_PER_SECOND
+                  parameters:
+                    - ''
+            -
+              name: 'Nginx: $1 $2 $3'
+              type: TRAP
+              key: 'nginx.status["{#SERVERNAME}",response,scarce]'
+              delay: '0'
+              applications:
+                -
+                  name: 'Nginx VTS'
+              preprocessing:
+                -
+                  type: CHANGE_PER_SECOND
+                  parameters:
+                    - ''
+            -
+              name: 'Nginx: $1 $2 $3'
+              type: TRAP
+              key: 'nginx.status["{#SERVERNAME}",response,stale]'
+              delay: '0'
+              applications:
+                -
+                  name: 'Nginx VTS'
+              preprocessing:
+                -
+                  type: CHANGE_PER_SECOND
+                  parameters:
+                    - ''
+            -
+              name: 'Nginx: $1 $2 $3'
+              type: TRAP
+              key: 'nginx.status["{#SERVERNAME}",response,updating]'
+              delay: '0'
+              applications:
+                -
+                  name: 'Nginx VTS'
+              preprocessing:
+                -
+                  type: CHANGE_PER_SECOND
+                  parameters:
+                    - ''
+          graph_prototypes:
+            -
+              name: 'Nginx: {#SERVERNAME} statistics'
+              graph_items:
+                -
+                  color: 00C800
+                  item:
+                    host: Template.Nginx.Vts
+                    key: 'nginx.status["{#SERVERNAME}",requests]'
+                -
+                  sortorder: '1'
+                  color: C8C800
+                  item:
+                    host: Template.Nginx.Vts
+                    key: 'nginx.status["{#SERVERNAME}",response,1xx]'
+                -
+                  sortorder: '2'
+                  color: FF9999
+                  item:
+                    host: Template.Nginx.Vts
+                    key: 'nginx.status["{#SERVERNAME}",response,2xx]'
+                -
+                  sortorder: '3'
+                  color: FF99FF
+                  item:
+                    host: Template.Nginx.Vts
+                    key: 'nginx.status["{#SERVERNAME}",response,3xx]'
+                -
+                  sortorder: '4'
+                  color: 00C8C8
+                  item:
+                    host: Template.Nginx.Vts
+                    key: 'nginx.status["{#SERVERNAME}",response,4xx]'
+                -
+                  sortorder: '5'
+                  color: C80000
+                  item:
+                    host: Template.Nginx.Vts
+                    key: 'nginx.status["{#SERVERNAME}",response,5xx]'
+        -
+          name: 'Nginx: Upstream discovery'
+          type: TRAP
+          key: nginx.upstream.discovery
+          delay: '0'
+          lifetime: 1d
+          item_prototypes:
+            -
+              name: 'Nginx: $1 $2 $3'
+              type: TRAP
+              key: 'nginx.status[upstream,"{#UPSTREAM}",1xx]'
+              delay: '0'
+              applications:
+                -
+                  name: 'Nginx VTS'
+              preprocessing:
+                -
+                  type: CHANGE_PER_SECOND
+                  parameters:
+                    - ''
+            -
+              name: 'Nginx: $1 $2 $3'
+              type: TRAP
+              key: 'nginx.status[upstream,"{#UPSTREAM}",2xx]'
+              delay: '0'
+              applications:
+                -
+                  name: 'Nginx VTS'
+              preprocessing:
+                -
+                  type: CHANGE_PER_SECOND
+                  parameters:
+                    - ''
+            -
+              name: 'Nginx: $1 $2 $3'
+              type: TRAP
+              key: 'nginx.status[upstream,"{#UPSTREAM}",3xx]'
+              delay: '0'
+              applications:
+                -
+                  name: 'Nginx VTS'
+              preprocessing:
+                -
+                  type: CHANGE_PER_SECOND
+                  parameters:
+                    - ''
+            -
+              name: 'Nginx: $1 $2 $3'
+              type: TRAP
+              key: 'nginx.status[upstream,"{#UPSTREAM}",4xx]'
+              delay: '0'
+              applications:
+                -
+                  name: 'Nginx VTS'
+              preprocessing:
+                -
+                  type: CHANGE_PER_SECOND
+                  parameters:
+                    - ''
+            -
+              name: 'Nginx: $1 $2 $3'
+              type: TRAP
+              key: 'nginx.status[upstream,"{#UPSTREAM}",5xx]'
+              delay: '0'
+              applications:
+                -
+                  name: 'Nginx VTS'
+              preprocessing:
+                -
+                  type: CHANGE_PER_SECOND
+                  parameters:
+                    - ''
+            -
+              name: 'Nginx: $1 $2 $3'
+              type: TRAP
+              key: 'nginx.status[upstream,"{#UPSTREAM}",in]'
+              delay: '0'
+              units: B/s
+              applications:
+                -
+                  name: 'Nginx VTS'
+              preprocessing:
+                -
+                  type: CHANGE_PER_SECOND
+                  parameters:
+                    - ''
+            -
+              name: 'Nginx: $1 $2 $3'
+              type: TRAP
+              key: 'nginx.status[upstream,"{#UPSTREAM}",out]'
+              delay: '0'
+              units: B/s
+              applications:
+                -
+                  name: 'Nginx VTS'
+              preprocessing:
+                -
+                  type: CHANGE_PER_SECOND
+                  parameters:
+                    - ''
+            -
+              name: 'Nginx: $1 $2 $3'
+              type: TRAP
+              key: 'nginx.status[upstream,"{#UPSTREAM}",total]'
+              delay: '0'
+              applications:
+                -
+                  name: 'Nginx VTS'
+              preprocessing:
+                -
+                  type: CHANGE_PER_SECOND
+                  parameters:
+                    - ''
+          graph_prototypes:
+            -
+              name: 'Nginx: upstream {#UPSTREAM} statistics'
+              type: STACKED
+              ymax_type_1: ITEM
+              ymax_item_1:
+                host: Template.Nginx.Vts
+                key: 'nginx.status[upstream,"{#UPSTREAM}",total]'
+              graph_items:
+                -
+                  color: 66FFFF
+                  calc_fnc: ALL
+                  item:
+                    host: Template.Nginx.Vts
+                    key: 'nginx.status[upstream,"{#UPSTREAM}",1xx]'
+                -
+                  sortorder: '1'
+                  color: 66FF66
+                  calc_fnc: ALL
+                  item:
+                    host: Template.Nginx.Vts
+                    key: 'nginx.status[upstream,"{#UPSTREAM}",2xx]'
+                -
+                  sortorder: '2'
+                  color: 6666FF
+                  calc_fnc: ALL
+                  item:
+                    host: Template.Nginx.Vts
+                    key: 'nginx.status[upstream,"{#UPSTREAM}",3xx]'
+                -
+                  sortorder: '3'
+                  color: FF66FF
+                  calc_fnc: ALL
+                  item:
+                    host: Template.Nginx.Vts
+                    key: 'nginx.status[upstream,"{#UPSTREAM}",4xx]'
+                -
+                  sortorder: '4'
+                  color: FF3333
+                  calc_fnc: ALL
+                  item:
+                    host: Template.Nginx.Vts
+                    key: 'nginx.status[upstream,"{#UPSTREAM}",5xx]'
+      macros:
+        -
+          macro: '{$NGINX.VTS_STATUS.HOST}'
+          value: 'http://{HOSTNAME}/nginx_vts_status/format/json'
+          description: 'Path to http dashboard nginx vts_status. json format'
+        -
+          macro: '{$NGINX.VTS_STATUS.PORT}'
+          value: '80'
+          description: 'Port of Nginx.  Macros for item'
+  value_maps:
+    -
+      name: 'Service state'
+      mappings:
+        -
+          value: '0'
+          newvalue: Down
+        -
+          value: '1'
+          newvalue: Up
